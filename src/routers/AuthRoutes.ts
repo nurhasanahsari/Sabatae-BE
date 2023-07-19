@@ -6,7 +6,7 @@ import validator from '../middleware/validator';
 
 class AuthRoutes extends BaseRoutes {
   public routes(): void {
-    this.router.post('/login', AuthValidator.loginValidator(), validator.validate, Controller.login);
+    this.router.post('/login', validator.validate, Controller.login);
     this.router.post('/logout', AuthGuard.checkRefreshToken, Controller.logoutToken);
   }
 }

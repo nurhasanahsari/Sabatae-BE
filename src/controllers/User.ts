@@ -71,7 +71,7 @@ class User {
 
         if (!userExist) {
           // 1. insert data
-          const createAccount = await DbControll.createData({ ...req.body, password: newPassword, status: '99' }, 'sc_main.t_user', 'id', client);
+          const createAccount = await DbControll.createData({ ...req.body, password: newPassword, status: '01' }, 'sc_main.t_user', 'id', client);
 
           // 2. create log activity
           await DbControll.insertLog(req.body.id_client, 'Menambahkan user baru', req, client);
@@ -116,6 +116,38 @@ class User {
       }, res);
     } catch (error: any) {
       return response(res, 500, 'Gagal memperbarui data pengguna');
+    }
+  };
+
+  changePassword = async (req: IUserParam, res: Response) => {
+    try {
+      tx(async (client: any) => {
+        // prevent column updates it shouldn't do by themselves
+        const salt = await bcrypt.genSalt(13);
+        const newPassword = await bcrypt.hash(req.body.password, salt);
+
+        // 1. get old data
+        const currentData = await UserModel.getTableUsers({ id: req.params.id });
+
+        // 2. create log activity
+        const log = await DbControll.insertLog(
+          req.body.id_client,
+          `Mereset password pengguna ${currentData.data.rows[0].full_name} (${req.params.id})`,
+          req,
+          client
+        );
+
+        // 3. move old data to sc_log
+        await DbControll.createData({ ...currentData.data.rows[0], id_user_activity: log.data.rows[0].id }, 'sc_log.t_user', 'id', client);
+
+        // 4. update data
+        const whereUpdate = { id: req.params.id, qs: 'id' };
+        await DbControll.updateData(whereUpdate, { password: newPassword, updated_by: req.body.id_client }, 'sc_main.t_user', client);
+
+        return response(res, 200, `Password pengguna berhasil diperbarui`, true);
+      }, res);
+    } catch (error: any) {
+      return response(res, 500, 'Gagal memperbarui password pengguna');
     }
   };
 

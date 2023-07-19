@@ -2,12 +2,14 @@ const Pool = require('pg').Pool;
 import dotenv from 'dotenv';
 import { Response } from 'express';
 import response from './../utils/response';
+import nodemailer from 'nodemailer';
 dotenv.config();
 
-const SERVER_PORT = process.env.SERVER_PORT ? Number(process.env.SERVER_PORT) : 9090;
+const SERVER_PORT = process.env.SERVER_PORT ? Number(process.env.SERVER_PORT) : 1337;
 const ACCESS_SECRET = process.env.ACCESS_SECRET ? process.env.ACCESS_SECRET : 'default';
 const REFRESH_SECRET = process.env.REFRESH_SECRET ? process.env.REFRESH_SECRET : 'default';
-const { REACT_APP, DB_HOST, DB_PORT, DB_DATABASE, DB_PASSWORD, DB_USER } = process.env;
+const { REACT_APP, SPACES_ACCESS, SPACES_SECRET, EMAIL_USER, EMAIL_PASSWORD, DB_HOST, DB_PORT, DB_DATABASE, DB_PASSWORD, DB_USER, BE_SIAKAD } =
+  process.env;
 const pool = new Pool({
   user: DB_USER,
   password: DB_PASSWORD,
@@ -36,21 +38,13 @@ const tx = (callback: any, res: Response) => {
   });
 };
 
-const txSocket = (callback: any) => {
-  pool.connect().then(async (client: any) => {
-    try {
-      await client.query(`set TIMEZONE = 'Asia/Bangkok'`);
-      await client.query('BEGIN');
-      await client.query('COMMIT');
-      client.release();
-      await callback(client);
-    } catch (err: any) {
-      await client.query('ROLLBACK');
-      client.release();
-      console.log(err.stack);
-    }
-  });
-};
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: EMAIL_USER,
+    pass: EMAIL_PASSWORD,
+  },
+});
 
 export const config = {
   server: {
@@ -60,13 +54,18 @@ export const config = {
   database: {
     pool,
     tx,
-    txSocket,
   },
+  transporter,
   token: {
     accessSecret: ACCESS_SECRET,
     refreshSecret: REFRESH_SECRET,
   },
   envConf: {
     reactApp: REACT_APP,
+    siakad: BE_SIAKAD,
+  },
+  storage: {
+    access: SPACES_ACCESS || 'access',
+    secret: SPACES_SECRET || 'secret',
   },
 };

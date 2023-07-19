@@ -38,7 +38,7 @@ export default class Users {
         page = (Number(page) - 1) * Number(offset);
         const sqlParams: any[] = [];
 
-        let qs = `select * from sc_main.t_user tu`;
+        let qs = `select * from sc_main.t_user tu where tu.id is not null`;
 
         let indexP = 1;
         if (param?.id) {
@@ -58,7 +58,6 @@ export default class Users {
           sqlParams.push(param.email);
           indexP++;
         }
-
         if (param?.role) {
           qs += ` and tu.role = $${indexP}`;
           sqlParams.push(param.role);
