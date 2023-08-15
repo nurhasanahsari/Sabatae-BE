@@ -1,12 +1,13 @@
-export interface IInventoryParam {
+export interface ITransactionParam {
   users?: {} | any;
   query?: {} | any;
   params?: {} | any;
   body?: {} | any;
   id?: String;
+  id_product?: String;
   name?: String;
-  stock?: Number;
-  id_category?: String;
+  qty?: Number;
+  id_client?: String;
   page?: Number;
   offset?: Number;
 }

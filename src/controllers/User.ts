@@ -1,4 +1,3 @@
-import AuthToken from '../middleware/authentication';
 import DbControll from './../utils/Crud';
 import response from '../utils/response';
 import { Response } from 'express';
@@ -6,10 +5,8 @@ import UserModel from './../models/User';
 import { IUserParam } from '../interfaces/User';
 import { config } from '../config';
 import bcrypt from 'bcrypt';
-import path from 'path';
 
 const { tx } = config.database;
-const { token: tokenConfig, envConf } = config;
 
 class User {
   async getAllUser(req: IUserParam, res: Response): Promise<Response> {

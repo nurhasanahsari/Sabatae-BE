@@ -1,15 +1,11 @@
-import AuthToken from '../middleware/authentication';
 import DbControll from './../utils/Crud';
 import response from '../utils/response';
 import { Response } from 'express';
 import InventoryModel from './../models/Inventory';
 import { IInventoryParam } from '../interfaces/Inventory';
 import { config } from '../config';
-import bcrypt from 'bcrypt';
-import path from 'path';
 
 const { tx } = config.database;
-const { token: tokenConfig, envConf } = config;
 
 class Inventory {
   async getAllInventory(req: IInventoryParam, res: Response): Promise<Response> {
@@ -34,7 +30,7 @@ class Inventory {
   createInventory = async (req: IInventoryParam, res: Response) => {
     try {
       tx(async (client: any) => {
-        const data = await InventoryModel.getTableInventory(req?.query);
+        const data = await InventoryModel.getDataInventory(req?.query);
         const categories = data?.data?.rows;
 
         let InventoryExist = false;
