@@ -1,11 +1,15 @@
+import AuthToken from '../middleware/authentication';
 import DbControll from './../utils/Crud';
 import response from '../utils/response';
 import { Response } from 'express';
 import CategoryModel from './../models/Category';
 import { ICategoryParam } from '../interfaces/Category';
 import { config } from '../config';
+import bcrypt from 'bcrypt';
+import path from 'path';
 
 const { tx } = config.database;
+const { token: tokenConfig, envConf } = config;
 
 class Category {
   async getAllCategory(req: ICategoryParam, res: Response): Promise<Response> {
@@ -30,7 +34,7 @@ class Category {
   createCategory = async (req: ICategoryParam, res: Response) => {
     try {
       tx(async (client: any) => {
-        const data = await CategoryModel.getDataCategory(req?.query);
+        const data = await CategoryModel.getTableCategory(req?.query);
         const categories = data?.data?.rows;
 
         let CategoryExist = false;

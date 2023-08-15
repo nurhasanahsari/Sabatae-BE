@@ -36,7 +36,7 @@ class Inventory {
         let InventoryExist = false;
 
         for (let i = 0; i < categories?.length; i++) {
-          if (categories[i]?.name === req.body.name) {
+          if (categories[i]?.name === req?.body?.name || categories?.name?.toLowerCase() === req?.body?.name) {
             InventoryExist = true;
           }
         }

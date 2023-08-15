@@ -22,6 +22,12 @@ export default class Users {
           indexP++;
         }
 
+        if (param?.id_category) {
+          qs += ` and ti.id_category = $${indexP}`;
+          sqlParams.push(param.id_category);
+          indexP++;
+        }
+
         qs += ' order by ti.created desc ';
         if (param?.page) {
           qs += ` OFFSET ${page} ROWS  FETCH FIRST ${offset} ROW ONLY`;
