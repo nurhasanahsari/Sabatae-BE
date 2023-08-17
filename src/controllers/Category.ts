@@ -3,6 +3,7 @@ import DbControll from './../utils/Crud';
 import response from '../utils/response';
 import { Response } from 'express';
 import CategoryModel from './../models/Category';
+import InventoryModel from './../models/Inventory';
 import { ICategoryParam } from '../interfaces/Category';
 import { config } from '../config';
 import bcrypt from 'bcrypt';
@@ -80,8 +81,14 @@ class Category {
   deleteCategory = async (req: ICategoryParam, res: Response) => {
     try {
       tx(async (client: any) => {
-        const whereDelete = { id: req.params.id, qs: 'id' };
-        await DbControll.deleteData(whereDelete, 'sc_main.t_category', client);
+        const data = await InventoryModel.getTableInventory({ id_category: req.params.id });
+
+        if (data?.data?.rowCount > 0) {
+          return response(res, 400, `Kategori digunakan pada persediaan`, true);
+        } else {
+          const whereDelete = { id: req.params.id, qs: 'id' };
+          await DbControll.deleteData(whereDelete, 'sc_main.t_category', client);
+        }
 
         return response(res, 200, `Kategori berhasil dihapus`, true);
       }, res);
