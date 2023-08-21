@@ -2,12 +2,11 @@ import BaseRouter from './BaseRouter';
 import Controller from '../controllers/User';
 import AuthGuard from '../middleware/authentication';
 import validator from '../middleware/validator';
-import { errorMulterHandler, uploadUserExcel } from '../middleware/multes';
 
 class UserRoutes extends BaseRouter {
   public routes(): void {
     // get
-    this.router.get('/all', AuthGuard.checkAccessTokenSuperAdmin, Controller.getAllUser);
+    this.router.get('/all', AuthGuard.checkAccessTokenAdmin, Controller.getAllUser);
     this.router.get('/table', AuthGuard.checkAccessTokenSuperAdmin, Controller.getTableUser);
     this.router.get('/:id', AuthGuard.checkAccessTokenSuperAdmin, Controller.getUser);
 

@@ -77,4 +77,36 @@ export default class Users {
       }
     });
   };
+
+  public static getFilterInventory = (param?: IInventoryParam): Promise<IResM> => {
+    return new Promise((resolve, reject) => {
+      try {
+        const sqlParams: any[] = [];
+
+        let qs = 'select ti.id, ti.name from sc_main.t_inventory ti where ti.id is not null group by ti.id, ti.name';
+        let indexP = 1;
+
+        if (param?.id) {
+          qs += ` and ti.id = $${indexP}`;
+          sqlParams.push(param.id);
+          indexP++;
+        }
+
+        if (param?.id_category) {
+          qs += ` and ti.id_category = $${indexP}`;
+          sqlParams.push(param.id_category);
+          indexP++;
+        }
+
+        db.query(qs, sqlParams, (err: any, result: any) => {
+          if (err) {
+            reject({ success: false, error: err });
+          }
+          resolve({ success: true, data: result });
+        });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  };
 }

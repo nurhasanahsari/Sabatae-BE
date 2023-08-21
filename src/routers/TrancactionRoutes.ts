@@ -6,11 +6,11 @@ import validator from '../middleware/validator';
 class CategoryRoutes extends BaseRouter {
   public routes(): void {
     // get
-    this.router.get('/all', AuthGuard.checkAccessTokenSuperAdmin, Controller.getAllTransaction);
-    this.router.get('/table', AuthGuard.checkAccessTokenSuperAdmin, Controller.getTransaction);
+    this.router.get('/all', AuthGuard.checkAccessTokenAdmin, Controller.getAllTransaction);
+    this.router.get('/table', AuthGuard.checkAccessTokenAdmin, Controller.getTransaction);
 
     // post
-    this.router.post('/', AuthGuard.checkAccessTokenSuperAdmin, validator.validate, Controller.createTransaction);
+    this.router.post('/', AuthGuard.checkAccessTokenAdmin, validator.validate, Controller.createTransaction);
   }
 }
 

@@ -6,17 +6,18 @@ import validator from '../middleware/validator';
 class CategoryRoutes extends BaseRouter {
   public routes(): void {
     // get
-    this.router.get('/all', AuthGuard.checkAccessTokenSuperAdmin, Controller.getAllCategory);
-    this.router.get('/table', AuthGuard.checkAccessTokenSuperAdmin, Controller.getCategory);
+    this.router.get('/all', AuthGuard.checkAccessTokenAdmin, Controller.getAllCategory);
+    this.router.get('/table', AuthGuard.checkAccessTokenAdmin, Controller.getCategory);
+    this.router.get('/filter', AuthGuard.checkAccessTokenAdmin, Controller.getFilterCategory);
 
     // post
-    this.router.post('/', AuthGuard.checkAccessTokenSuperAdmin, validator.validate, Controller.createCategory);
+    this.router.post('/', AuthGuard.checkAccessTokenAdmin, validator.validate, Controller.createCategory);
 
     // patch
-    this.router.patch('/:id', AuthGuard.checkAccessTokenSuperAdmin, validator.validate, Controller.updateCategory);
+    this.router.patch('/:id', AuthGuard.checkAccessTokenAdmin, validator.validate, Controller.updateCategory);
 
     // delete
-    this.router.delete('/:id', AuthGuard.checkAccessTokenSuperAdmin, validator.validate, Controller.deleteCategory);
+    this.router.delete('/:id', AuthGuard.checkAccessTokenAdmin, validator.validate, Controller.deleteCategory);
   }
 }
 

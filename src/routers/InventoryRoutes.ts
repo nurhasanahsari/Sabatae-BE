@@ -6,17 +6,18 @@ import validator from '../middleware/validator';
 class InventoryRoutes extends BaseRouter {
   public routes(): void {
     // get
-    this.router.get('/all', AuthGuard.checkAccessTokenSuperAdmin, Controller.getAllInventory);
-    this.router.get('/table', AuthGuard.checkAccessTokenSuperAdmin, Controller.getInventory);
+    this.router.get('/all', AuthGuard.checkAccessTokenAdmin, Controller.getAllInventory);
+    this.router.get('/table', AuthGuard.checkAccessTokenAdmin, Controller.getInventory);
+    this.router.get('/filter', AuthGuard.checkAccessTokenAdmin, Controller.getFilterInventory);
 
     // post
-    this.router.post('/', AuthGuard.checkAccessTokenSuperAdmin, validator.validate, Controller.createInventory);
+    this.router.post('/', AuthGuard.checkAccessTokenAdmin, validator.validate, Controller.createInventory);
 
     // patch
-    this.router.patch('/:id', AuthGuard.checkAccessTokenSuperAdmin, validator.validate, Controller.updateInventory);
+    this.router.patch('/:id', AuthGuard.checkAccessTokenAdmin, validator.validate, Controller.updateInventory);
 
     // delete
-    this.router.delete('/:id', AuthGuard.checkAccessTokenSuperAdmin, validator.validate, Controller.deleteInventory);
+    this.router.delete('/:id', AuthGuard.checkAccessTokenAdmin, validator.validate, Controller.deleteInventory);
   }
 }
 

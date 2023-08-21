@@ -90,20 +90,4 @@ export default class Auth {
       }
     });
   };
-
-  public static getStudentClass = (id_people: string): Promise<IResM> => {
-    return new Promise((resolve, reject) => {
-      try {
-        let qs = `select class from siakad.student_classes sc where sc.student = $1 limit 1`;
-        db.query(qs, [id_people], (error: any, result: any) => {
-          if (error) {
-            return reject({ success: false, error });
-          }
-          resolve({ success: true, data: result.rows[0] });
-        });
-      } catch (error) {
-        reject(error);
-      }
-    });
-  };
 }
