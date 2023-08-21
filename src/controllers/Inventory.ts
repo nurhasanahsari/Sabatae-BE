@@ -13,6 +13,25 @@ class Inventory {
       const page = parseInt(req?.query?.page);
       const offset = parseInt(req?.query?.offset);
 
+      const result = await InventoryModel.getDataInventory(req?.query);
+
+      if (result.success) {
+        const countData = { total: result.data.rowCount > 0 ? parseInt(result.data.rows[0].totalcount) : 0, page, offset };
+        return response(res, 200, 'Berhasil mendapatkan daftar persediaan', true, result.data.rows, page ? countData : {});
+      } else {
+        return response(res, 500, 'Terjadi kesalahan');
+      }
+    } catch (error) {
+      console.log(error);
+      return response(res, 500, 'Terjadi kesalahan');
+    }
+  }
+
+  async getInventory(req: IInventoryParam, res: Response): Promise<Response> {
+    try {
+      const page = parseInt(req?.query?.page);
+      const offset = parseInt(req?.query?.offset);
+
       const result = await InventoryModel.getTableInventory(req?.query);
 
       if (result.success) {

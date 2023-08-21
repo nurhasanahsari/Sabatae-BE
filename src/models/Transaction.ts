@@ -25,6 +25,11 @@ export default class Transaction {
           sqlParams.push(param.id_product);
           indexP++;
         }
+        if (param?.type) {
+          qs += ` and tt.type = $${indexP}`;
+          sqlParams.push(param.type);
+          indexP++;
+        }
         if (param?.id_client) {
           qs += ` and tt.id_client = $${indexP}`;
           sqlParams.push(param.id_client);
@@ -53,7 +58,7 @@ export default class Transaction {
       try {
         const sqlParams: any[] = [];
 
-        let qs = 'select * from sc_main.t_transaction tt left join sc_main.t_inventory ti on ti.id =tt.id_product where tt.id is not null';
+        let qs = 'select * from sc_main.t_transaction tt left join sc_main.t_inventory ti on ti.id =tt.id_product where tt.id is not null ';
         let indexP = 1;
 
         if (param?.id) {
@@ -64,6 +69,11 @@ export default class Transaction {
         if (param?.id_product) {
           qs += ` and tt.id_product = $${indexP}`;
           sqlParams.push(param.id_product);
+          indexP++;
+        }
+        if (param?.type) {
+          qs += ` and tt.type = $${indexP}`;
+          sqlParams.push(param.type);
           indexP++;
         }
         if (param?.id_client) {

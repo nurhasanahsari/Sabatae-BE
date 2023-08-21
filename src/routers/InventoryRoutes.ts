@@ -6,7 +6,8 @@ import validator from '../middleware/validator';
 class InventoryRoutes extends BaseRouter {
   public routes(): void {
     // get
-    this.router.get('/', AuthGuard.checkAccessTokenSuperAdmin, Controller.getAllInventory);
+    this.router.get('/all', AuthGuard.checkAccessTokenSuperAdmin, Controller.getAllInventory);
+    this.router.get('/table', AuthGuard.checkAccessTokenSuperAdmin, Controller.getInventory);
 
     // post
     this.router.post('/', AuthGuard.checkAccessTokenSuperAdmin, validator.validate, Controller.createInventory);

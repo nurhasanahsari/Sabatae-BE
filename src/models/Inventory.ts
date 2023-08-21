@@ -60,6 +60,12 @@ export default class Users {
           indexP++;
         }
 
+        if (param?.id_category) {
+          qs += ` and ti.id_category = $${indexP}`;
+          sqlParams.push(param.id_category);
+          indexP++;
+        }
+
         db.query(qs, sqlParams, (err: any, result: any) => {
           if (err) {
             reject({ success: false, error: err });

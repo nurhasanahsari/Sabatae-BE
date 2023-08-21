@@ -6,7 +6,8 @@ import validator from '../middleware/validator';
 class CategoryRoutes extends BaseRouter {
   public routes(): void {
     // get
-    this.router.get('/', AuthGuard.checkAccessTokenSuperAdmin, Controller.getAllCategory);
+    this.router.get('/all', AuthGuard.checkAccessTokenSuperAdmin, Controller.getAllCategory);
+    this.router.get('/table', AuthGuard.checkAccessTokenSuperAdmin, Controller.getCategory);
 
     // post
     this.router.post('/', AuthGuard.checkAccessTokenSuperAdmin, validator.validate, Controller.createCategory);

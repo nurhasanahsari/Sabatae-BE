@@ -14,6 +14,25 @@ class Transaction {
       const page = parseInt(req?.query?.page);
       const offset = parseInt(req?.query?.offset);
 
+      const result = await TransactionModel.getDataTransaction(req?.query);
+
+      if (result.success) {
+        const countData = { total: result.data.rowCount > 0 ? parseInt(result.data.rows[0].totalcount) : 0, page, offset };
+        return response(res, 200, 'Berhasil mendapatkan daftar transaksi', true, result.data.rows, page ? countData : {});
+      } else {
+        return response(res, 500, 'Terjadi kesalahan');
+      }
+    } catch (error) {
+      console.log(error);
+      return response(res, 500, 'Terjadi kesalahan');
+    }
+  }
+
+  async getTransaction(req: ITransactionParam, res: Response): Promise<Response> {
+    try {
+      const page = parseInt(req?.query?.page);
+      const offset = parseInt(req?.query?.offset);
+
       const result = await TransactionModel.getTableTransaction(req?.query);
 
       if (result.success) {

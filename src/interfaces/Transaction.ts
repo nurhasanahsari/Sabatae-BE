@@ -7,6 +7,7 @@ export interface ITransactionParam {
   id_product?: String;
   name?: String;
   qty?: Number;
+  type?: String;
   id_client?: String;
   page?: Number;
   offset?: Number;

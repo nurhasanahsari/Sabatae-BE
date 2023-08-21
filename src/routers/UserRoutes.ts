@@ -7,7 +7,8 @@ import { errorMulterHandler, uploadUserExcel } from '../middleware/multes';
 class UserRoutes extends BaseRouter {
   public routes(): void {
     // get
-    this.router.get('/', AuthGuard.checkAccessTokenSuperAdmin, Controller.getAllUser);
+    this.router.get('/all', AuthGuard.checkAccessTokenSuperAdmin, Controller.getAllUser);
+    this.router.get('/table', AuthGuard.checkAccessTokenSuperAdmin, Controller.getTableUser);
     this.router.get('/:id', AuthGuard.checkAccessTokenSuperAdmin, Controller.getUser);
 
     // post
