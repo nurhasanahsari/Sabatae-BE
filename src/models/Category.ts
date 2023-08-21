@@ -69,7 +69,7 @@ export default class Users {
       try {
         const sqlParams: any[] = [];
 
-        let qs = 'select ti.id, ti.name from sc_main.t_inventory ti where ti.id is not null group by ti.id, ti.name';
+        let qs = 'select tc.id,tc.name from sc_main.t_category tc where tc.id is not null group by tc.id,tc.name,tc.created,tc.updated ';
         let indexP = 1;
 
         if (param?.id) {
