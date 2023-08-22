@@ -11,6 +11,7 @@ class CategoryRoutes extends BaseRouter {
 
     // post
     this.router.post('/', AuthGuard.checkAccessTokenAdmin, validator.validate, Controller.createTransaction);
+    this.router.post('/retur', AuthGuard.checkAccessTokenAdmin, validator.validate, Controller.createTransactionRetur);
   }
 }
 

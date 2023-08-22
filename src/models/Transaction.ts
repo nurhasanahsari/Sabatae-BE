@@ -12,7 +12,8 @@ export default class Transaction {
         page = (Number(page) - 1) * Number(offset);
         const sqlParams: any[] = [];
 
-        let qs = 'select * from sc_main.t_transaction tt left join sc_main.t_inventory ti on ti.id =tt.id_product where tt.id is not null';
+        let qs =
+          'select tt.*, ti.name from sc_main.t_transaction tt left join sc_main.t_inventory ti on ti.id = tt.id_product where tt.id is not null ';
         let indexP = 1;
 
         if (param?.id) {
@@ -58,7 +59,8 @@ export default class Transaction {
       try {
         const sqlParams: any[] = [];
 
-        let qs = 'select * from sc_main.t_transaction tt left join sc_main.t_inventory ti on ti.id =tt.id_product where tt.id is not null ';
+        let qs =
+          'select tt.*, ti.name from sc_main.t_transaction tt left join sc_main.t_inventory ti on ti.id = tt.id_product where tt.id is not null ';
         let indexP = 1;
 
         if (param?.id) {

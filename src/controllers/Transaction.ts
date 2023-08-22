@@ -84,6 +84,21 @@ class Transaction {
       return response(res, 500, 'Gagal menambahkan transaksi baru');
     }
   };
+
+  createTransactionRetur = async (req: ITransactionParam, res: Response) => {
+    try {
+      tx(async (client: any) => {
+        const body = req.body;
+        const whereUpdate = { id: body?.id_sale, qs: 'id' };
+
+        await DbControll.updateData(whereUpdate, { type: 'retur', reason: body?.reason }, 'sc_main.t_transaction', client);
+
+        return response(res, 201, `berhasil menambahkan retur barang`, true);
+      }, res);
+    } catch (error) {
+      return response(res, 500, 'Gagal menambahkan retur barang');
+    }
+  };
 }
 
 export default new Transaction();
