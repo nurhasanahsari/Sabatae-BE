@@ -3,7 +3,7 @@ import Controller from '../controllers/Transaction';
 import AuthGuard from '../middleware/authentication';
 import validator from '../middleware/validator';
 
-class CategoryRoutes extends BaseRouter {
+class TransactionRoutes extends BaseRouter {
   public routes(): void {
     // get
     this.router.get('/all', AuthGuard.checkAccessTokenAdmin, Controller.getAllTransaction);
@@ -15,4 +15,4 @@ class CategoryRoutes extends BaseRouter {
   }
 }
 
-export default new CategoryRoutes().router;
+export default new TransactionRoutes().router;

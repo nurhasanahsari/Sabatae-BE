@@ -3,7 +3,6 @@ export interface ISummaryParam {
   query?: {} | any;
   params?: {} | any;
   body?: {} | any;
-  id_library?: String;
-  start_date?: Date;
-  end_date?: Date;
+  page?: Number;
+  offset?: Number;
 }
