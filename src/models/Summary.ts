@@ -11,7 +11,6 @@ export default class Summary {
         const offset = param?.offset || 10;
         page = (Number(page) - 1) * Number(offset);
         const sqlParams: any[] = [];
-
         let qs = `select 
         (select sum(ti.capital) from sc_main.t_inventory ti ) as first_capital,
         (select sum(ti.capital - ti.profit - ti.deficit) from sc_main.t_inventory ti) as remaining_capital,
