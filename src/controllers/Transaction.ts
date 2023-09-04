@@ -56,23 +56,52 @@ class Transaction {
         const dataInventory = await InventoryModel.getTableInventory({ id: body?.id_product });
         const inventory = dataInventory?.data?.rows[0];
 
+        // inventory
         const stock = parseInt(inventory?.stock);
+        const IPricePerItem = parseInt(inventory?.price_per_item);
+        const ITotalPrice = parseInt(inventory?.total_price);
+        const IProfit = parseInt(inventory?.profit);
+        const ICapital = parseInt(inventory?.capital);
+
+        // body
         const qty = parseInt(body?.qty);
+        const BPrice = parseInt(body?.price);
+
+        // var
+        // purchase
+        const totalStockPurchase = stock + qty;
+        const totalPricePurchase = ITotalPrice + BPrice;
+        const totalPricePerItem = totalPricePurchase / totalStockPurchase;
+        const totalCapitalPurchase = ICapital + totalPricePurchase;
+
+        // sale
+        const totalStockSale = stock - qty;
+        const totalPricePerItemSale = IPricePerItem * qty;
+        const totalPriceSale = ITotalPrice - totalPricePerItemSale;
+        const totalPriceMinusPerItem = BPrice - totalPricePerItemSale;
+        const totalProfitSale = totalPricePerItemSale + totalPriceMinusPerItem;
+        const totalProfitFinalSale = IProfit + totalProfitSale;
 
         let createDataTransaction;
         if (body?.type === 'purchase') {
-          const total = stock + qty;
-
           createDataTransaction = await DbControll.createData({ ...req.body }, 'sc_main.t_transaction', 'id', client);
-          await DbControll.updateData(whereUpdate, { stock: total }, 'sc_main.t_inventory', client);
+          await DbControll.updateData(
+            whereUpdate,
+            { stock: totalStockPurchase, total_price: totalPricePurchase, price_per_item: totalPricePerItem, capital: totalCapitalPurchase },
+            'sc_main.t_inventory',
+            client
+          );
         } else {
           if (stock < qty) {
             return response(res, 401, `Jumlah persediaan barang kurang`, true);
           } else {
-            const total = stock - qty;
-
             createDataTransaction = await DbControll.createData({ ...req.body }, 'sc_main.t_transaction', 'id', client);
-            await DbControll.updateData(whereUpdate, { stock: total }, 'sc_main.t_inventory', client);
+            await DbControll.updateData(
+              whereUpdate,
+              { stock: totalStockSale, total_price: totalPriceSale, profit: totalProfitFinalSale },
+              'sc_main.t_inventory',
+              client
+            );
           }
         }
 
@@ -90,10 +119,34 @@ class Transaction {
       tx(async (client: any) => {
         const body = req.body;
         const whereUpdate = { id: body?.id_sale, qs: 'id' };
+        const whereUpdateInventory = { id: body?.id_product, qs: 'id' };
 
-        await DbControll.updateData(whereUpdate, { type: 'retur', reason: body?.reason }, 'sc_main.t_transaction', client);
+        const dataInventory = await InventoryModel.getTableInventory({ id: body?.id_product });
+        const inventory = dataInventory?.data?.rows[0];
 
-        return response(res, 201, `berhasil menambahkan retur barang`, true);
+        // inventory
+        const IProfit = parseInt(inventory?.profit);
+
+        // body
+        const BProfit = parseInt(body?.profit);
+
+        // var
+        const totalProfit = IProfit - BProfit;
+
+        let updateDataInventory;
+        let updateDataTransaction;
+
+        updateDataInventory = await DbControll.updateData(
+          whereUpdateInventory,
+          { profit: totalProfit, deficit: BProfit },
+          'sc_main.t_inventory',
+          client
+        );
+        updateDataTransaction = await DbControll.updateData(whereUpdate, { type: 'retur', reason: body?.reason }, 'sc_main.t_transaction', client);
+
+        if (updateDataInventory?.success && updateDataTransaction?.success) {
+          return response(res, 201, `berhasil menambahkan retur barang`, true);
+        }
       }, res);
     } catch (error) {
       return response(res, 500, 'Gagal menambahkan retur barang');

@@ -13,9 +13,10 @@ export default class Summary {
         const sqlParams: any[] = [];
 
         let qs = `select 
-        (select sum(tt1.price) from sc_main.t_transaction tt1 where tt1.type = 'purchase') as total_purchase,
-        (select sum(tt1.price) from sc_main.t_transaction tt1 where tt1.type = 'sale') as total_sale,
-        (select sum(tt1.price) from sc_main.t_transaction tt1 where tt1.type = 'retur') as total_retur,
+        (select sum(ti.capital) from sc_main.t_inventory ti ) as first_capital,
+        (select sum(ti.capital - ti.profit - ti.deficit) from sc_main.t_inventory ti) as remaining_capital,
+        (select sum(ti.profit) from sc_main.t_inventory ti) as total_profit,
+        (select sum(ti.deficit) from sc_main.t_inventory ti) as total_deficit,
         (select count(*) from sc_main.t_transaction tt1 where tt1.type = 'purchase') as purchase, 
         (select count(*) from sc_main.t_transaction tt2 where tt2.type = 'sale') as sale, 
         (select count(*) from sc_main.t_transaction tt3 where tt3.type = 'retur') as retur
