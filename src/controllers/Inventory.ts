@@ -116,7 +116,7 @@ class Inventory {
       tx(async (client: any) => {
         const whereDelete = { id: req.params.id, qs: 'id' };
         await DbControll.deleteData(whereDelete, 'sc_main.t_inventory', client);
-        const whereDeleteTransaction = { id_product: req.params.id, qs: 'id_product' };
+        const whereDeleteTransaction = { id: req.params.id, qs: 'id_product' };
         await DbControll.deleteData(whereDeleteTransaction, 'sc_main.t_transaction', client);
 
         return response(res, 200, `Persediaan berhasil dihapus`, true);
